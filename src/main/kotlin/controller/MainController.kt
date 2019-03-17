@@ -39,48 +39,6 @@ class MainController {
     private var logger = Logger.getLogger(Androlib::class.java.name)
 
 
-    private suspend fun startClone(){
-        var apkName = apkFname.text
-        var decoder = ApkDecoder()
-        decoder.setForceDelete(true)
-        decoder.setForceDecodeManifest(1.toShort())
-        decoder.setKeepBrokenResources(true)
-        var outDir = File("/tmp/1")
-        decoder.setOutDir(outDir)
-        decoder.setApkFile(File(apkFname.text))
-        try {
-            decoder.decode()
-        } catch (var22: OutDirExistsException) {
-            System.err.println("Destination directory (" + outDir.getAbsolutePath() + ") already exists. Use -f switch if you want to overwrite it.")
-            loggerText.appendText("Destination directory (" + outDir.getAbsolutePath() + ") already exists. Use -f switch if you want to overwrite it.")
-
-            System.exit(1)
-        } catch (var23: InFileNotFoundException) {
-            System.err.println("Input file ($apkName) was not found or was not readable.")
-            loggerText.appendText("Input file ($apkName) was not found or was not readable.")
-//                System.exit(1)
-        } catch (var24: CantFindFrameworkResException) {
-            System.err.println("Can't find framework resources for package of id: " + var24.pkgId.toString() + ". You must install proper framework files, see project website for more info.")
-            loggerText.appendText("Can't find framework resources for package of id: " + var24.pkgId.toString() + ". You must install proper framework files, see project website for more info.")
-//                System.exit(1)
-        } catch (var25: IOException) {
-            System.err.println("Could not modify file. Please ensure you have permission.")
-            loggerText.appendText("Could not modify file. Please ensure you have permission.")
-//                System.exit(1)
-        } catch (var26: DirectoryException) {
-            System.err.println("Could not modify internal dex files. Please ensure you have permission.")
-            loggerText.appendText("Could not modify internal dex files. Please ensure you have permission.")
-//                System.exit(1)
-        } finally {
-            try {
-                decoder.close()
-            } catch (var21: IOException) {
-            }
-
-        }
-    }
-
-
     fun initialize(){
 
         logger.addHandler(TextAreaHandler(loggerText))
@@ -140,10 +98,6 @@ class MainController {
                 }
 
                  val manifestFile = File(outDir.absolutePath + "/AndroidManifest.xml")
-//                 val xmlDoc: Document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(manifestFile)
-//                 xmlDoc.documentElement.normalize()
-//                 val packageName = xmlDoc.documentElement.getAttribute("package")
-//                 loggerText.appendText( "$packageName\n")
 
                  var manifestData = manifestFile.inputStream().readBytes().toString(Charsets.UTF_8)
 
@@ -165,8 +119,6 @@ class MainController {
                     val tmpF = File(it.absolutePath ?: "")
                     if (!tmpF.exists() || tmpF.isDirectory)
                         return@forEach
-//                    println("${it.absolutePath}\n")
-//                    logger.info(it.absolutePath)
                     var tmpData = tmpF.inputStream().readBytes().toString(Charsets.UTF_8).replace(packageName, smaliPackageName)
                     tmpF.outputStream().write(tmpData.toByteArray(Charsets.UTF_8))
 
@@ -183,13 +135,3 @@ class MainController {
 
     }
 }
-
-
-//import brut.apktool.*
-//
-//fun main(args: Array<String>){
-//
-//    println("hello")
-//    var Arr3 = arrayOf<String>("apktool", "d", "-s", "ololo.apk")
-//    brut.apktool.Main.main(Arr3)
-//}
