@@ -9,10 +9,9 @@ import javafx.stage.Stage
 class Main : Application() {
 
     val layout = "/main.fxml"
-//    val layout = "resources/main.fxml"
 
     override fun start(primaryStage: Stage?) {
-        System.setProperty("prism.lcdtext", "false") // for beautiful fonts on linux
+        System.setProperty("prism.lcdtext", "false")
         primaryStage?.title = "APK Cloner"
         primaryStage?.scene = Scene(load<Parent?>(Main.javaClass.getResource(layout)))
         primaryStage?.show()
@@ -25,4 +24,3 @@ class Main : Application() {
         }
     }
 }
-///home/zaval/IdeaProjects/com.github.zaval.apkcloner/src/resources/main.fxml
