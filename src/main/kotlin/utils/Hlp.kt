@@ -8,10 +8,64 @@ import brut.androlib.err.InFileNotFoundException
 import brut.androlib.err.OutDirExistsException
 import brut.common.BrutException
 import brut.directory.DirectoryException
+import com.android.apksig.ApkSigner
+import com.android.apksig.apk.MinSdkVersionException
+import com.android.apksigner.PasswordRetriever
+import com.android.apksigner.SignerParams
 import java.io.File
 import java.io.IOException
 import java.util.logging.Logger
 import kotlin.random.Random
+
+fun sign(apkName: String) :Boolean {
+
+    val newFname = apkName.replace(Regex("\\.apk$"), "-signed.apk")
+
+    val signers = java.util.ArrayList<SignerParams>(1)
+    val signerParams = SignerParams()
+    signerParams.setKeystoreFile("/home/zaval/projects/android-reverse/key.jks")
+    signerParams.setKeystorePasswordSpec("pass:123123")
+    signers.add(signerParams)
+
+    val signerConfigs = ArrayList<ApkSigner.SignerConfig>(signers.size)
+
+//    val keyFileName = File(signers[0].keyFile).name
+
+    var passwordRetriever = PasswordRetriever()
+    signers[0].loadPrivateKeyAndCerts(passwordRetriever)
+
+    val signerConfig = ApkSigner.SignerConfig.Builder(
+        "key", signers[0].privateKey, signers[0].certs
+    )
+        .build()
+    signerConfigs.add(signerConfig)
+
+
+    val apkSignerBuilder = ApkSigner.Builder(signerConfigs)
+        .setInputApk(File(apkName))
+        .setOutputApk(File(newFname))
+        .setOtherSignersSignaturesPreserved(false)
+    val apkSigner = apkSignerBuilder.build()
+
+    try {
+        apkSigner.sign()
+    } catch (e: MinSdkVersionException) {
+        var msg = e.message
+        if (msg != null) {
+            if (!msg.endsWith(".")) {
+                msg += '.'.toString()
+            }
+        }
+        throw MinSdkVersionException(
+            "Failed to determine APK's minimum supported platform version" + ". Use --min-sdk-version to override",
+            e
+        )
+    }
+
+
+    return true
+
+}
 
 fun processApk(apkName: String): Boolean{
     val logger = Logger.getLogger(Androlib::class.java.name)
@@ -78,6 +132,7 @@ fun processApk(apkName: String): Boolean{
     val smaliPackageName = packageName.replace('.', '/')
 
 
+    logger.info("*** Changing classes ***")
     outDir.walk(FileWalkDirection.TOP_DOWN).forEach {
         val tmpF = File(it.absolutePath ?: "")
         if (!tmpF.exists() || tmpF.isDirectory || !(tmpF.absolutePath ?: "").endsWith(".smali"))
@@ -104,7 +159,7 @@ fun processApk(apkName: String): Boolean{
     val fDirectory = File(apkName).parent ?: ""
     val resultFileName = fDirectory + "/" + apkName.replace(fDirectory, "").replace(Regex("\\.apk", RegexOption.IGNORE_CASE), "$replacement.apk")
 
-    logger.info("***Compiling all together***\n")
+    logger.info("*** Compiling all together ***")
 
     try {
 
@@ -113,6 +168,8 @@ fun processApk(apkName: String): Boolean{
     catch (ex: BrutException){
         logger.info("{${ex.message}}\n")
     }
+
+    sign(resultFileName)
 
     outDir.deleteRecursively()
 

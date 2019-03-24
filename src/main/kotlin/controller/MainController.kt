@@ -73,7 +73,11 @@ class MainController {
              GlobalScope.launch{
 
                  switchUI(false)
-                 utils.Hlp.processApk(apkFname.text)
+                 try {
+                     utils.Hlp.processApk(apkFname.text)
+                 } catch (e: Exception){
+                     loggerText.appendText("@@@ Can't clone this apk @@@\n${e.localizedMessage}")
+                 }
 
                  switchUI(true)
                  loggerText.appendText("*** Clone finished ***\n")
