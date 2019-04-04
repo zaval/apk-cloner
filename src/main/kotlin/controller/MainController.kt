@@ -8,6 +8,7 @@ import brut.androlib.err.OutDirExistsException
 import brut.common.BrutException
 import brut.directory.DirectoryException
 import javafx.beans.Observable
+import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import utils.TextAreaHandler
@@ -50,6 +51,9 @@ class MainController {
 
     @FXML
     lateinit var mainTab: TabPane
+
+    @FXML
+    lateinit var splitPane: SplitPane
 
 
     private var logger = Logger.getLogger(Androlib::class.java.name)
@@ -188,6 +192,17 @@ class MainController {
                 _: Observable ->
                 loadApps()
 
+        }
+
+        mainTab.selectionModel.selectedItemProperty().addListener {
+            _ : Observable ->
+            println(mainTab.selectionModel.selectedIndex)
+            if (mainTab.selectionModel.selectedIndex == 1){
+                splitPane.setDividerPosition(0, 0.5)
+            }
+            else {
+                splitPane.setDividerPosition(0, 0.2)
+            }
         }
 
     }

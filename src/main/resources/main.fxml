@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
@@ -11,48 +13,38 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="mainBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="400.0" prefWidth="600.0" style="-fx-padding: 5; -fx-spacing: 5;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
-   <children>
-      <TabPane prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" fx:id="mainTab">
-        <tabs>
-          <Tab text="Local">
-            <content>
-              <!--<AnchorPane minHeight="0.0" minWidth="0.0"  prefWidth="200.0">-->
-                     <!--<children>-->
-
-                        <HBox alignment="CENTER" prefHeight="8.0" prefWidth="590.0" style="-fx-padding: 20; -fx-spacing: 20;">
-                           <children>
-                              <Label text="APK file:" />
-                              <TextField fx:id="apkFname" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="browseApk" mnemonicParsing="false" text="Browse" />
-                           </children>
-                        </HBox>
-                     <!--</children>-->
-                  <!--</AnchorPane>-->
-            </content>
-          </Tab>
-          <Tab text="Phone">
-               <content>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 20; -fx-spacing: 20;">
-                           <children>
-                              <Label text="Device:" />
-                              <ComboBox fx:id="devicesCombo" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="updateDevices" mnemonicParsing="false" text="Update" />
-                           </children>
-                        </HBox>
-                        <ListView maxHeight="Infinity" prefWidth="200.0" VBox.vgrow="ALWAYS" fx:id="appsList"/>
-                     </children>
-                  </VBox>
-               </content>
-          </Tab>
-        </tabs>
-      </TabPane>
+<VBox fx:id="mainBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="600.0" prefWidth="800.0" style="-fx-padding: 5; -fx-spacing: 5;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
 
 
-      <TextArea fx:id="loggerText" maxHeight="Infinity" VBox.vgrow="ALWAYS" />
-      <Button fx:id="cloneApk" text="Clone" />
 
-   </children>
+    <SplitPane fx:id="splitPane" dividerPositions="0.2" maxHeight="Infinity" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+        <TabPane fx:id="mainTab" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+            <Tab text="Local">
+                <HBox alignment="TOP_CENTER" prefHeight="8.0" prefWidth="590.0" style="-fx-padding: 20; -fx-spacing: 20;">
+                    <Label text="APK file:" />
+                    <TextField fx:id="apkFname" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                    <Button fx:id="browseApk" mnemonicParsing="false" text="Browse" />
+                </HBox>
+
+            </Tab>
+            <Tab text="Phone">
+                <VBox prefHeight="200.0" prefWidth="100.0">
+                    <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 20; -fx-spacing: 20;">
+                        <Label text="Device:" />
+                        <ComboBox fx:id="devicesCombo" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="updateDevices" mnemonicParsing="false" text="Update" />
+                    </HBox>
+                    <ListView fx:id="appsList" maxHeight="Infinity" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                </VBox>
+            </Tab>
+        </TabPane>
+        <VBox>
+            <TextArea fx:id="loggerText" maxHeight="Infinity" VBox.vgrow="ALWAYS" />
+            <Button fx:id="cloneApk" text="Clone">
+            <VBox.margin>
+               <Insets bottom="5.0" left="5.0" top="5.0" />
+            </VBox.margin></Button>
+        </VBox>
+    </SplitPane>
+
 </VBox>

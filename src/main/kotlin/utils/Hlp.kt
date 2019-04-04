@@ -190,7 +190,7 @@ fun processApk(apkName: String): Boolean{
 
     sign(resultFileName)
 
-//    outDir.deleteRecursively()
+    outDir.deleteRecursively()
 
     return true
 
