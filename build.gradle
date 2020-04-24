@@ -6,7 +6,7 @@ plugins {
 
 javafx {
     version = "14"
-    modules = [ 'javafx.controls' ]
+    modules = [ 'javafx.controls' , 'javafx.fxml' ]
 }
 
 apply plugin:'application'
