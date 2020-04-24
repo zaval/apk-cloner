@@ -19,7 +19,6 @@ import java.security.KeyFactory
 import java.security.PrivateKey
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.*
-import sun.security.provider.X509Factory
 import java.io.ByteArrayInputStream
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
@@ -48,7 +47,8 @@ fun sign(apkName: String) :Boolean {
 
 
     val decoded =
-        Base64.getDecoder().decode(publicKeyContent.replace(X509Factory.BEGIN_CERT, "").replace(X509Factory.END_CERT, ""))
+//        Base64.getDecoder().decode(publicKeyContent.replace(X509Factory.BEGIN_CERT, "").replace(X509Factory.END_CERT, ""))
+        Base64.getDecoder().decode(publicKeyContent.replace("-----BEGIN CERTIFICATE-----", "").replace("-----END CERTIFICATE-----", ""))
 
     val cert: X509Certificate = CertificateFactory.getInstance("X.509")?.generateCertificate(ByteArrayInputStream(decoded)) as X509Certificate
 
